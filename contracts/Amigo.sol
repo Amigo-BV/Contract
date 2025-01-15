@@ -33,4 +33,14 @@ contract Amigo {
             }
         }
     }
+
+    // Getter 함수 추가
+    function getProfile(address _user) public view returns (string memory, string memory, string memory, uint256) {
+        Profile memory profile = profiles[_user];
+        return (profile.nickname, profile.ipfsHash, profile.education, profile.nftTokenId);
+    }
+
+    function getLikes(address _user) public view returns (Like[] memory) {
+        return likes[_user];
+    }
 }
