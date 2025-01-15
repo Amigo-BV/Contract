@@ -2,45 +2,26 @@
 pragma solidity ^0.8.0;
 
 contract Amigo {
-    struct Profile {
-        string nickname;
-        string ipfsHash;
-        string education;
-        uint256 nftTokenId;
+    mapping(address => uint256) public balances;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    constructor(uint256 initialSupply) {
+        balances[msg.sender] = initialSupply;  // 컨트랙트 배포자에게 초기 공급량 할당
     }
 
-    struct Like {
-        address from;
-        address to;
-        bool isConfirmed;
+    function transfer(address to, uint256 amount) public returns (bool) {
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+        
+        balances[msg.sender] -= amount;  // 송금자에서 금액 차감
+        balances[to] += amount;  // 수신자에게 금액 추가
+        
+        emit Transfer(msg.sender, to, amount);  // 이벤트 발행
+
+        return true;
     }
 
-    mapping(address => Profile) private profiles;
-    mapping(address => Like[]) private likes;
-
-    function createProfile(string memory _nickname, string memory _ipfsHash, string memory _education) public {
-        profiles[msg.sender] = Profile(_nickname, _ipfsHash, _education, 0);
-    }
-
-    function sendLike(address _to) public {
-        likes[_to].push(Like(msg.sender, _to, false));
-    }
-
-    function confirmLike(address _from) public {
-        for (uint i = 0; i < likes[msg.sender].length; i++) {
-            if (likes[msg.sender][i].from == _from) {
-                likes[msg.sender][i].isConfirmed = true;
-            }
-        }
-    }
-
-    // Getter 함수 추가
-    function getProfile(address _user) public view returns (string memory, string memory, string memory, uint256) {
-        Profile memory profile = profiles[_user];
-        return (profile.nickname, profile.ipfsHash, profile.education, profile.nftTokenId);
-    }
-
-    function getLikes(address _user) public view returns (Like[] memory) {
-        return likes[_user];
+    function balanceOf(address account) public view returns (uint256) {
+        return balances[account];  // 특정 주소의 잔액 조회
     }
 }

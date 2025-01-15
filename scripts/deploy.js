@@ -1,20 +1,23 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-    // Amigo 컨트랙트 가져오기
-    const Amigo = await hre.ethers.getContractFactory("Amigo");
+  console.log("Hardhat ethers version:", ethers.version);
 
-    // Amigo 컨트랙트 배포
-    const amigo = await Amigo.deploy();
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying contract with the account:", deployer.address);
 
-    // 배포 완료 대기
-    await amigo.deployed();
+  console.log("Attempting to parse initial supply...");
+  const initialSupply = ethers.parseUnits("1000000", 18); // 수정된 부분
+  console.log("Initial supply parsed:", initialSupply.toString());
 
-    console.log("Amigo deployed to:", amigo.address);
+  const Amigo = await ethers.getContractFactory("Amigo");
+  const amigo = await Amigo.deploy(initialSupply); // 배포
+
+  // 컨트랙트 주소 확인
+  console.log("Amigo contract deployed at:", amigo.target); // .target 사용
 }
 
-// 에러 처리 포함 메인 실행
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
+  console.error("Error in deployment:", error);
+  process.exit(1);
 });
