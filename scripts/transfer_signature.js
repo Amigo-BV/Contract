@@ -3,7 +3,7 @@ const { ethers } = require("ethers");
 async function generateSignature() {
   // 전송자의 개인 키 (예제용, 실제로는 안전하게 보관하세요)
 //   public key = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
-  const privateKey = "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a"; // Account #1
+  const privateKey = "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"; // Account #1
   const wallet = new ethers.Wallet(privateKey);
 
   // 메시지 데이터 (JSON 형태로 직렬화된 객체)

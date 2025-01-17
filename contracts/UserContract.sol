@@ -24,6 +24,10 @@ contract UserContract {
         emit UserRegistered(msg.sender, _username);
     }
 
+    function isUserRegistered(address _userAddress) public view returns (bool) {
+        return bytes(users[_userAddress].username).length > 0;
+    }
+
     function getUser(address _userAddress) public view returns (User memory) {
         require(
             bytes(users[_userAddress].username).length > 0,
