@@ -1,24 +1,24 @@
 const { ethers } = require("ethers");
 
-async function generateSignature() {
-  // 전송자의 개인 키 (예제용, 실제로는 안전하게 보관하세요)
-//   public key = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
-  const privateKey = "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"; // Account #1
+async function generateSignature(from, to, amount, privateKey) {
   const wallet = new ethers.Wallet(privateKey);
 
-  // 메시지 데이터 (JSON 형태로 직렬화된 객체)
-  const message = JSON.stringify({
-    to: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    amount: "10"
-  });
-
-  // 서명 생성
+  const message = `Transfer: ${from} ${to} ${amount}`;
   const signature = await wallet.signMessage(message);
 
-  console.log("Message:", message);
+  const walletAddress = wallet.address; // 서명자의 주소
+
+  console.log("Generated Data for transfer:");
+  console.log("from:", walletAddress);
+  console.log("to:", to);
+  console.log("amount:", amount);
   console.log("Signature:", signature);
 
-  return signature;
+  return { address: walletAddress, message, signature };
 }
 
-generateSignature().catch((err) => console.error(err));
+const from = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // Account #3
+const to = "0x90F79bf6EB2c4f870365E785982E1f101E93b906"; // Account #5
+const amount = "100";
+const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; // Account #1
+generateSignature(from, to, amount, privateKey).catch(console.error);

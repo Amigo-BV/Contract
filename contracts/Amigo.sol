@@ -24,3 +24,4 @@ contract Amigo {
         return balances[account];  // 특정 주소의 잔액 조회
     }
 }
+    
